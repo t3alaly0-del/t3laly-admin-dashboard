@@ -1,0 +1,26 @@
+name: t3laly_admin
+description: "تعلالى — لوحة تحكم الأدمن (Flutter Web)"
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.3.0   # ✅ keep only ONE, use the newer version
+  provider: ^6.1.2
+  google_fonts: ^6.2.1
+  http: ^1.2.0
+  file_picker: ^8.0.0
+  t3laly_shared:
+    path: ../shared
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
