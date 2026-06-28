@@ -246,7 +246,8 @@ class _AddGameCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: () => _openDialog(context),
+        //onTap: () => _openDialog(context),
+        onTap: null,
         child: const DottedBorderBox(
           child: Center(
             child: Column(
