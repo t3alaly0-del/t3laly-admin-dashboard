@@ -2,10 +2,11 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'web')));
+// Serve from build/web (Flutter's output folder)
+app.use(express.static(path.join(__dirname, 'build/web')));
 
 app.get('/{*path}', (req, res) => {
-  res.sendFile(path.join(__dirname, 'web', 'index.html'));
+  res.sendFile(path.join(__dirname, 'build/web', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
