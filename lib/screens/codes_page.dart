@@ -427,12 +427,14 @@ class _CodeRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(code.code,
-                    style: const TextStyle(
-                        fontFamily: 'monospace',
-                        fontSize: 15,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 2,
-                        color: AppColors.ink)),
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    style: const TextStyle(
+        fontFamily: 'monospace',
+        fontSize: 12,
+        fontWeight: FontWeight.w900,
+        letterSpacing: 1,
+        color: AppColors.ink)),
                 if (meta.isNotEmpty)
                   Text(meta.toString(),
                       style: const TextStyle(
