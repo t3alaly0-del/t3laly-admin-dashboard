@@ -412,10 +412,40 @@ class _CodeRow extends StatelessWidget {
       meta.write('ينتهي: ${_fmtDate(code.expiry!)}');
     }
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
+return GestureDetector(
+  onTap: () => showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: const Text('الكود', textDirection: TextDirection.rtl),
+      content: SelectableText(
+        code.code,
+        style: const TextStyle(
+            fontFamily: 'monospace',
+            fontSize: 20,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 2),
+        textAlign: TextAlign.center,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Clipboard.setData(ClipboardData(text: code.code));
+            Navigator.pop(ctx);
+            showToast(context, 'تم نسخ الكود 📋');
+          },
+          child: const Text('نسخ'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(ctx),
+          child: const Text('إغلاق'),
+        ),
+      ],
+    ),
+  ),
+  child: Container(
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    decoration: BoxDecoration(
         color: const Color(0xFFF7FBFD),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: const Color(0xFFDDEEF7), width: 1.5),
@@ -506,8 +536,9 @@ class _CodeRow extends StatelessWidget {
             icon: const Icon(Icons.delete_outline_rounded, size: 18, color: AppColors.red),
           ),
         ],
-      ),
+      ),),
     );
+
   }
 
   Future<void> _handleExpiry(BuildContext context, CodeModel code, AdminState admin) async {
