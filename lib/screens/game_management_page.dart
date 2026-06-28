@@ -175,12 +175,13 @@ class _GameManagementPageState extends State<GameManagementPage> {
                         style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: AppColors.ink)),
                     const Spacer(),
                     ElevatedButton.icon(
-                      onPressed: () => _showAddCardDialog(context, admin),
+                      //onPressed: () => _showAddCardDialog(context, admin),
+                       onPressed: null,
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white),
                       icon: const Icon(Icons.add, size: 16),
-                      label: const Text('+ أضف كارت'),
+                      label: const Text(' أضف كارت'),
                     ),
                   ],
                 ),
