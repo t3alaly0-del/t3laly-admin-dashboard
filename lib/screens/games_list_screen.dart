@@ -32,7 +32,8 @@ class GamesListScreen extends StatelessWidget {
                   Text('تعلالى',
                       style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 18)),
                   SizedBox(width: 8),
-                  Text('لوحة الأدمن', style: TextStyle(color: AppColors.yellow, fontWeight: FontWeight.w700, fontSize: 11)),
+                  Text('لوحة الأدمن',
+                      style: TextStyle(color: AppColors.yellow, fontWeight: FontWeight.w700, fontSize: 11)),
                 ],
               ),
             ),
@@ -46,7 +47,8 @@ class GamesListScreen extends StatelessWidget {
                             children: [
                               const Icon(Icons.wifi_off_rounded, size: 48, color: Color(0xFF5D8BAB)),
                               const SizedBox(height: 12),
-                              Text(admin.error!, textAlign: TextAlign.center,
+                              Text(admin.error!,
+                                  textAlign: TextAlign.center,
                                   style: const TextStyle(color: Color(0xFF5D8BAB))),
                               const SizedBox(height: 16),
                               ElevatedButton(
@@ -62,21 +64,42 @@ class GamesListScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text('الألعاب المتاحة',
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: Color(0xFF5D8BAB), letterSpacing: .5)),
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w900,
+                                      color: Color(0xFF5D8BAB),
+                                      letterSpacing: .5)),
                               const SizedBox(height: 14),
-                              Wrap(
-                                spacing: 16,
-                                runSpacing: 16,
-                                children: [
-                                  for (final game in admin.games)
-                                    _GameCard(game: game, onTap: () {
-                                      admin.openGame(game);
-                                      Navigator.pushNamed(context, '/dashboard');
-                                    }),
-                                  _AddGameCard(onAdd: (name) {
-                                    showToast(context, 'قريباً — إضافة الألعاب من قاعدة البيانات');
-                                  }),
-                                ],
+                              LayoutBuilder(
+                                builder: (context, constraints) {
+                                  final w = constraints.maxWidth;
+                                  final cardWidth = w < 500
+                                      ? w
+                                      : w < 800
+                                          ? (w - 16) / 2
+                                          : 240.0;
+                                  return Wrap(
+                                    spacing: 16,
+                                    runSpacing: 16,
+                                    children: [
+                                      for (final game in admin.games)
+                                        SizedBox(
+                                          width: cardWidth,
+                                          child: _GameCard(game: game, onTap: () {
+                                            admin.openGame(game);
+                                            Navigator.pushNamed(context, '/dashboard');
+                                          }),
+                                        ),
+                                      SizedBox(
+                                        width: cardWidth,
+                                        height: 120,
+                                        child: _AddGameCard(onAdd: (name) {
+                                          showToast(context, 'قريباً — إضافة الألعاب من قاعدة البيانات');
+                                        }),
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -96,75 +119,85 @@ class _GameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 240,
-      child: Material(
-        color: Colors.white,
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: onTap,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(18, 20, 18, 16),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 52,
-                      height: 52,
-                      decoration: BoxDecoration(color: AppColors.blueLight, borderRadius: BorderRadius.circular(16)),
-                      alignment: Alignment.center,
-                      child: const MascotIcon(size: 28),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(game.name,
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18, 20, 18, 16),
+              child: Row(
+                children: [
+                  Container(
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                        color: AppColors.blueLight,
+                        borderRadius: BorderRadius.circular(16)),
+                    alignment: Alignment.center,
+                    child: const MascotIcon(size: 28),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(game.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.ink)),
+                        if (game.description != null)
+                          Text(game.description!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: AppColors.ink)),
-                          if (game.description != null)
-                            Text(game.description!,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 11.5, color: Color(0xFF5D8BAB))),
-                        ],
+                              style: const TextStyle(
+                                  fontSize: 11.5, color: Color(0xFF5D8BAB))),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.fromLTRB(18, 10, 18, 14),
+              decoration: const BoxDecoration(
+                  border: Border(
+                      top: BorderSide(color: Color(0xFFF0F6FA), width: 1.5))),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: game.isOpen
+                          ? const Color(0xFFE3F6EA)
+                          : const Color(0xFFFFF8E1),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      game.isOpen ? 'متاحة ✅' : 'مجمدة ❄️',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w800,
+                        color: game.isOpen
+                            ? const Color(0xFF1E8E4D)
+                            : const Color(0xFF8A6D1B),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const Spacer(),
+                  const Text('←',
+                      style: TextStyle(fontSize: 18, color: Color(0xFF5D8BAB))),
+                ],
               ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 10, 18, 14),
-                decoration: const BoxDecoration(border: Border(top: BorderSide(color: Color(0xFFF0F6FA), width: 1.5))),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: game.isOpen ? const Color(0xFFE3F6EA) : const Color(0xFFFFF8E1),
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: Text(
-                        game.isOpen ? 'متاحة ✅' : 'مجمدة ❄️',
-                        style: TextStyle(
-                          fontSize: 11.5,
-                          fontWeight: FontWeight.w800,
-                          color: game.isOpen ? const Color(0xFF1E8E4D) : const Color(0xFF8A6D1B),
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    const Text('←', style: TextStyle(fontSize: 18, color: Color(0xFF5D8BAB))),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -208,25 +241,25 @@ class _AddGameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 240,
-      height: 120,
-      child: Material(
-        color: Colors.white,
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: () => _openDialog(context),
-          child: const DottedBorderBox(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('＋', style: TextStyle(fontSize: 28, color: Color(0xFF5D8BAB))),
-                  SizedBox(height: 6),
-                  Text('أضف لعبة جديدة', style: TextStyle(color: Color(0xFF5D8BAB), fontWeight: FontWeight.w800, fontSize: 13.5)),
-                ],
-              ),
+        onTap: () => _openDialog(context),
+        child: const DottedBorderBox(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('＋', style: TextStyle(fontSize: 28, color: Color(0xFF5D8BAB))),
+                SizedBox(height: 6),
+                Text('أضف لعبة جديدة',
+                    style: TextStyle(
+                        color: Color(0xFF5D8BAB),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 13.5)),
+              ],
             ),
           ),
         ),
@@ -235,7 +268,6 @@ class _AddGameCard extends StatelessWidget {
   }
 }
 
-/// Simple dashed-border container (Flutter has no built-in dashed border).
 class DottedBorderBox extends StatelessWidget {
   final Widget child;
   const DottedBorderBox({super.key, required this.child});
@@ -256,14 +288,16 @@ class _DashedBorderPainter extends CustomPainter {
       ..color = const Color(0xFFC8E2F0)
       ..strokeWidth = 2.5
       ..style = PaintingStyle.stroke;
-    final rrect = RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(20));
+    final rrect =
+        RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(20));
     final path = Path()..addRRect(rrect);
     final dashPath = Path();
     for (final metric in path.computeMetrics()) {
       var distance = 0.0;
       while (distance < metric.length) {
         const dashLength = 6.0, gapLength = 5.0;
-        dashPath.addPath(metric.extractPath(distance, distance + dashLength), Offset.zero);
+        dashPath.addPath(
+            metric.extractPath(distance, distance + dashLength), Offset.zero);
         distance += dashLength + gapLength;
       }
     }

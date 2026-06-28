@@ -236,23 +236,35 @@ class _GameManagementPageState extends State<GameManagementPage> {
                     ),
                   )
                 else
-                  Wrap(
-                    spacing: 14,
-                    runSpacing: 14,
-                    children: admin.gameCards.map((card) => _CardTile(
-                      card: card,
-                      onEdit: () => _showEditCardDialog(context, admin, card),
-                      onDelete: () => showDeleteConfirmDialog(
-                        context,
-                        title: 'حذف الكارت',
-                        body: 'هتحذف كارت «${card['name']}»؟',
-                        onConfirm: () {
-                          admin.deleteGameCard(card['id']);
-                          showToast(context, 'تم الحذف');
-                        },
-                      ),
-                    )).toList(),
-                  ),
+                  LayoutBuilder(builder: (context, constraints) {
+                    final w = constraints.maxWidth;
+                    final tileWidth = w < 480
+                        ? w
+                        : w < 750
+                            ? (w - 14) / 2
+                            : 210.0;
+                    return Wrap(
+                      spacing: 14,
+                      runSpacing: 14,
+                      children: admin.gameCards.map((card) => SizedBox(
+                        width: tileWidth,
+                        height: 268,
+                        child: _CardTile(
+                          card: card,
+                          onEdit: () => _showEditCardDialog(context, admin, card),
+                          onDelete: () => showDeleteConfirmDialog(
+                            context,
+                            title: 'حذف الكارت',
+                            body: 'هتحذف كارت «${card['name']}»؟',
+                            onConfirm: () {
+                              admin.deleteGameCard(card['id']);
+                              showToast(context, 'تم الحذف');
+                            },
+                          ),
+                        ),
+                      )).toList(),
+                    );
+                  }),
               ],
             ),
           ),
@@ -791,8 +803,8 @@ class _CardTile extends StatelessWidget {
     }
 
     return SizedBox(
-      width: 210,
-      height: 268,
+      width: double.infinity,
+      height: double.infinity,
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,

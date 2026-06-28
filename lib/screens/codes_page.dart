@@ -37,8 +37,24 @@ class _CodesPageState extends State<CodesPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // ---- Stats ----
-        Row(
-          children: [
+        // ---- Stats ----
+        LayoutBuilder(builder: (context, constraints) {
+          if (constraints.maxWidth < 500) {
+            return Column(children: [
+              Row(children: [
+                Expanded(child: _StatBox(value: admin.totalCodes,  label: 'إجمالي', color: AppColors.primary)),
+                const SizedBox(width: 10),
+                Expanded(child: _StatBox(value: admin.unusedCodes, label: 'غير مستخدمة', color: AppColors.yellowDark)),
+              ]),
+              const SizedBox(height: 10),
+              Row(children: [
+                Expanded(child: _StatBox(value: admin.usedCodes,   label: 'مستخدمة', color: const Color(0xFF1E8E4D))),
+                const SizedBox(width: 10),
+                Expanded(child: _StatBox(value: admin.expiredCodes,label: 'منتهية',  color: AppColors.red)),
+              ]),
+            ]);
+          }
+          return Row(children: [
             Expanded(child: _StatBox(value: admin.totalCodes,   label: 'إجمالي الكودات', color: AppColors.primary)),
             const SizedBox(width: 12),
             Expanded(child: _StatBox(value: admin.unusedCodes,  label: 'غير مستخدمة',   color: AppColors.yellowDark)),
@@ -46,8 +62,8 @@ class _CodesPageState extends State<CodesPage> {
             Expanded(child: _StatBox(value: admin.usedCodes,    label: 'مستخدمة',       color: const Color(0xFF1E8E4D))),
             const SizedBox(width: 12),
             Expanded(child: _StatBox(value: admin.expiredCodes, label: 'منتهية',         color: AppColors.red)),
-          ],
-        ),
+          ]);
+        }),
         const SizedBox(height: 18),
 
         // ---- Generate ----

@@ -11,6 +11,7 @@ import 'rescue_tasks_page.dart';
 import 'gifts_page.dart';
 import 'codes_page.dart';
 import 'game_management_page.dart';
+import '../utils/responsive.dart';
 
 enum DashPage { game, points, codes, categories, rescue, gifts }
 
@@ -55,13 +56,11 @@ class _DashboardShellScreenState extends State<DashboardShellScreen> {
     final pack = admin.selectedPack;
 
     if (pack == null) {
-      // Still fetching games — wait for auto-open before deciding to redirect.
       if (admin.isLoading) {
         return const Scaffold(
           body: Center(child: CircularProgressIndicator()),
         );
       }
-      // Games loaded but still no pack (user explicitly browsed back).
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) Navigator.pushReplacementNamed(context, '/games');
       });
@@ -72,83 +71,150 @@ class _DashboardShellScreenState extends State<DashboardShellScreen> {
       backgroundColor: const Color(0xFFF0F6FA),
       body: Directionality(
         textDirection: TextDirection.rtl,
-        child: Row(
-          children: [
-            _Sidebar(
-              packName: pack.name,
-              selected: _page,
-              onSelect: (p) {
-                setState(() => _page = p);
-                _savePage(p);
-                final gameId = int.parse(pack.id);
-                switch (p) {
-                  case DashPage.game:       admin.fetchGameInfo();
-                  case DashPage.points:     admin.fetchCards(gameId);
-                  case DashPage.codes:      admin.fetchCodes(gameId);
-                  case DashPage.categories: admin.fetchCategories();
-                  case DashPage.rescue:     admin.fetchRescueTasks();
-                  case DashPage.gifts:      admin.fetchGiftLines();
-                }
-              },
-              onBack: () {
-                admin.backToGamesList();
-                Navigator.pushReplacementNamed(context, '/games');
-              },
-            ),
-            Expanded(
-              child: Column(
+        child: Responsive.isMobile(context)
+            ? _buildMobileLayout(context, admin, pack)
+            : Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 28, vertical: 14),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      border: Border(
-                          bottom:
-                              BorderSide(color: Color(0xFFDDEEF7), width: 1.5)),
-                    ),
-                    child: Row(
+                  _Sidebar(
+                    packName: pack.name,
+                    selected: _page,
+                    onSelect: (p) {
+                      setState(() => _page = p);
+                      _savePage(p);
+                      final gameId = int.parse(pack.id);
+                      switch (p) {
+                        case DashPage.game:       admin.fetchGameInfo();
+                        case DashPage.points:     admin.fetchCards(gameId);
+                        case DashPage.codes:      admin.fetchCodes(gameId);
+                        case DashPage.categories: admin.fetchCategories();
+                        case DashPage.rescue:     admin.fetchRescueTasks();
+                        case DashPage.gifts:      admin.fetchGiftLines();
+                      }
+                    },
+                    onBack: () {
+                      admin.backToGamesList();
+                      Navigator.pushReplacementNamed(context, '/games');
+                    },
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(_pageTitles[_page]!,
-                            style: const TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.ink)),
-                        const Spacer(),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 4),
-                          decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(999)),
-                          child: const Text('Admin Panel',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w800)),
+                              horizontal: 28, vertical: 14),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            border: Border(
+                                bottom: BorderSide(
+                                    color: Color(0xFFDDEEF7), width: 1.5)),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(_pageTitles[_page]!,
+                                  style: const TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.ink)),
+                              const Spacer(),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 4),
+                                decoration: BoxDecoration(
+                                    color: AppColors.primary,
+                                    borderRadius: BorderRadius.circular(999)),
+                                child: const Text('Admin Panel',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w800)),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.fromLTRB(28, 24, 28, 28),
+                            child: switch (_page) {
+                              DashPage.game       => const GameManagementPage(),
+                              DashPage.points     => const PointsPage(),
+                              DashPage.codes      => const CodesPage(),
+                              DashPage.categories => const CategoriesPage(),
+                              DashPage.rescue     => const RescueTasksPage(),
+                              DashPage.gifts      => const GiftsPage(),
+                            },
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(28, 24, 28, 28),
-                      child: switch (_page) {
-                        DashPage.game => const GameManagementPage(),
-                        DashPage.points => const PointsPage(),
-                        DashPage.codes => const CodesPage(),
-                        DashPage.categories => const CategoriesPage(),
-                        DashPage.rescue => const RescueTasksPage(),
-                        DashPage.gifts => const GiftsPage(),
-                      },
-                    ),
-                  ),
                 ],
               ),
-            ),
-          ],
+      ),
+    );
+  }
+
+  Widget _buildMobileLayout(BuildContext context, AdminState admin, pack) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF0F6FA),
+      appBar: AppBar(
+        backgroundColor: AppColors.primaryDark,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          _pageTitles[_page]!,
+          style: const TextStyle(
+              color: Colors.white, fontSize: 15, fontWeight: FontWeight.w900),
         ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(left: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(999)),
+            child: const Text('Admin',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800)),
+          ),
+        ],
+      ),
+      drawer: Drawer(
+        child: _Sidebar(
+          packName: pack.name,
+          selected: _page,
+          onSelect: (p) {
+            Navigator.pop(context);
+            setState(() => _page = p);
+            _savePage(p);
+            final gameId = int.parse(pack.id);
+            switch (p) {
+              case DashPage.game:       admin.fetchGameInfo();
+              case DashPage.points:     admin.fetchCards(gameId);
+              case DashPage.codes:      admin.fetchCodes(gameId);
+              case DashPage.categories: admin.fetchCategories();
+              case DashPage.rescue:     admin.fetchRescueTasks();
+              case DashPage.gifts:      admin.fetchGiftLines();
+            }
+          },
+          onBack: () {
+            admin.backToGamesList();
+            Navigator.pushReplacementNamed(context, '/games');
+          },
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+        child: switch (_page) {
+          DashPage.game       => const GameManagementPage(),
+          DashPage.points     => const PointsPage(),
+          DashPage.codes      => const CodesPage(),
+          DashPage.categories => const CategoriesPage(),
+          DashPage.rescue     => const RescueTasksPage(),
+          DashPage.gifts      => const GiftsPage(),
+        },
       ),
     );
   }
@@ -159,11 +225,12 @@ class _Sidebar extends StatelessWidget {
   final DashPage selected;
   final ValueChanged<DashPage> onSelect;
   final VoidCallback onBack;
-  const _Sidebar(
-      {required this.packName,
-      required this.selected,
-      required this.onSelect,
-      required this.onBack});
+  const _Sidebar({
+    required this.packName,
+    required this.selected,
+    required this.onSelect,
+    required this.onBack,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -207,8 +274,7 @@ class _Sidebar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Container(
                 margin: const EdgeInsets.only(bottom: 10),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(
                     color: const Color(0x1F6FC9EC),
                     borderRadius: BorderRadius.circular(12)),
@@ -242,8 +308,7 @@ class _Sidebar extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10)),
                   ),
                   child: const Text('← كل الألعاب',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
                 ),
               ),
             ),
@@ -252,27 +317,11 @@ class _Sidebar extends StatelessWidget {
             _NavItem(icon: '🎮', label: 'إدارة اللعبة', active: selected == DashPage.game, onTap: () => onSelect(DashPage.game)),
             _NavItem(icon: '⚙️', label: 'قيم النقاط', active: selected == DashPage.points, onTap: () => onSelect(DashPage.points)),
             const _NavSection('الكودات'),
-            _NavItem(
-                icon: '🔑',
-                label: 'إدارة الكودات',
-                active: selected == DashPage.codes,
-                onTap: () => onSelect(DashPage.codes)),
+            _NavItem(icon: '🔑', label: 'إدارة الكودات', active: selected == DashPage.codes, onTap: () => onSelect(DashPage.codes)),
             const _NavSection('المحتوى'),
-            _NavItem(
-                icon: '🗂️',
-                label: 'الكاتيجوريز',
-                active: selected == DashPage.categories,
-                onTap: () => onSelect(DashPage.categories)),
-            _NavItem(
-                icon: '😈',
-                label: 'أحكام الإنقاذ',
-                active: selected == DashPage.rescue,
-                onTap: () => onSelect(DashPage.rescue)),
-            _NavItem(
-                icon: '🎁',
-                label: 'مكافآت الفائز',
-                active: selected == DashPage.gifts,
-                onTap: () => onSelect(DashPage.gifts)),
+            _NavItem(icon: '🗂️', label: 'الكاتيجوريز', active: selected == DashPage.categories, onTap: () => onSelect(DashPage.categories)),
+            _NavItem(icon: '😈', label: 'أحكام الإنقاذ', active: selected == DashPage.rescue, onTap: () => onSelect(DashPage.rescue)),
+            _NavItem(icon: '🎁', label: 'مكافآت الفائز', active: selected == DashPage.gifts, onTap: () => onSelect(DashPage.gifts)),
             const SizedBox(height: 14),
           ],
         ),
@@ -303,11 +352,12 @@ class _NavItem extends StatelessWidget {
   final String icon, label;
   final bool active;
   final VoidCallback onTap;
-  const _NavItem(
-      {required this.icon,
-      required this.label,
-      required this.active,
-      required this.onTap});
+  const _NavItem({
+    required this.icon,
+    required this.label,
+    required this.active,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {

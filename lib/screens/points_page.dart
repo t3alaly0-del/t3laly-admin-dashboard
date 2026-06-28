@@ -50,21 +50,29 @@ class PointsPage extends StatelessWidget {
                 ),
               )
             else
-              Wrap(
-                spacing: 14,
-                runSpacing: 14,
-                children: [
-                  for (final detail in admin.cardDetails)
-                    _PointBox(
-                      emoji: detail.emoji,
-                      label: detail.name,
-                      value: detail.score,
-                      color: detail.score < 0 ? AppColors.red : AppColors.primary,
-                      valueColor: detail.score < 0 ? AppColors.redDark : null,
-                      onAdjust: (d) => admin.adjustCardScore(detail.id, d),
-                    ),
-                ],
-              ),
+              LayoutBuilder(builder: (context, constraints) {
+                final boxWidth = constraints.maxWidth < 400
+                    ? (constraints.maxWidth - 14) / 2
+                    : 180.0;
+                return Wrap(
+                  spacing: 14,
+                  runSpacing: 14,
+                  children: [
+                    for (final detail in admin.cardDetails)
+                      SizedBox(
+                        width: boxWidth,
+                        child: _PointBox(
+                          emoji: detail.emoji,
+                          label: detail.name,
+                          value: detail.score,
+                          color: detail.score < 0 ? AppColors.red : AppColors.primary,
+                          valueColor: detail.score < 0 ? AppColors.redDark : null,
+                          onAdjust: (d) => admin.adjustCardScore(detail.id, d),
+                        ),
+                      ),
+                  ],
+                );
+              }),
             const Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Divider()),
             ElevatedButton(
               onPressed: admin.cardDetails.isEmpty
@@ -107,7 +115,6 @@ class _PointBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 180,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: const Color(0xFFF7FBFD),
