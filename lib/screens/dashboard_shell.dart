@@ -118,18 +118,18 @@ class _DashboardShellScreenState extends State<DashboardShellScreen> {
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.ink)),
                               const Spacer(),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 4),
-                                decoration: BoxDecoration(
-                                    color: AppColors.primary,
-                                    borderRadius: BorderRadius.circular(999)),
-                                child: const Text('Admin Panel',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w800)),
-                              ),
+                              // Container(
+                              //   padding: const EdgeInsets.symmetric(
+                              //       horizontal: 12, vertical: 4),
+                              //   decoration: BoxDecoration(
+                              //       color: AppColors.primary,
+                              //       borderRadius: BorderRadius.circular(999)),
+                              //   child: const Text('Admin Panel',
+                              //       style: TextStyle(
+                              //           color: Colors.white,
+                              //           fontSize: 11,
+                              //           fontWeight: FontWeight.w800)),
+                              // ),
                             ],
                           ),
                         ),
@@ -167,18 +167,18 @@ class _DashboardShellScreenState extends State<DashboardShellScreen> {
               color: Colors.white, fontSize: 15, fontWeight: FontWeight.w900),
         ),
         actions: [
-          Container(
-            margin: const EdgeInsets.only(left: 12),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(999)),
-            child: const Text('Admin',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800)),
-          ),
+          // Container(
+          //   margin: const EdgeInsets.only(left: 12),
+          //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          //   decoration: BoxDecoration(
+          //       color: AppColors.primary,
+          //       borderRadius: BorderRadius.circular(999)),
+          //   child: const Text('Admin',
+          //       style: TextStyle(
+          //           color: Colors.white,
+          //           fontSize: 11,
+          //           fontWeight: FontWeight.w800)),
+          // ),
         ],
       ),
       drawer: Drawer(
