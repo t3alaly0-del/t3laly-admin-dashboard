@@ -8,10 +8,20 @@ class MascotIcon extends StatelessWidget {
   final double size;
   const MascotIcon({super.key, this.size = 40});
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(width: size, height: size, child: CustomPaint(painter: _HornPainter()));
-  }
+@override
+Widget build(BuildContext context) {
+  return SizedBox(
+    width: size,
+    height: size,
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(size * 0.2),
+      child: Image.asset(
+        'assets/icon.png',
+        fit: BoxFit.cover,
+      ),
+    ),
+  );
+}
 }
 
 class _HornPainter extends CustomPainter {
