@@ -233,10 +233,30 @@ class _EditableTextListPageState extends State<EditableTextListPage> {
                                         fontSize: 14)),
                                 const SizedBox(width: 8),
                                 Expanded(
-                                    child: Text(text,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 13.5))),
+  child: GestureDetector(
+    onTap: () => showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('النص الكامل', textDirection: TextDirection.rtl),
+        content: Text(text,
+            textDirection: TextDirection.rtl,
+            style: const TextStyle(fontSize: 14, height: 1.6)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('إغلاق'),
+          ),
+        ],
+      ),
+    ),
+    child: Text(text,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 13.5)),
+  ),
+),
                                 if (widget.onToggleStatus != null &&
                                     widget.itemStatuses != null)
                                   GestureDetector(
