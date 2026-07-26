@@ -470,7 +470,8 @@ return GestureDetector(
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: const Color(0xFFDDEEF7), width: 1.5),
       ),
-      child: Row(
+      child: LayoutBuilder(builder: (context, constraints) {
+        final row = Row(
         children: [
           Expanded(
             child: Column(
@@ -555,8 +556,30 @@ return GestureDetector(
             icon: const Icon(Icons.delete_outline_rounded, size: 18, color: AppColors.red),
           ),
         ],
-      ),),
-    );
+      );
+
+        if (constraints.maxWidth >= 480 && dialogDetails.isNotEmpty) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              row,
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Divider(height: 1),
+              ),
+              Text(
+                dialogDetails.join('  ·  '),
+                textDirection: TextDirection.rtl,
+                style: const TextStyle(
+                    fontSize: 12, color: Color(0xFF5D8BAB), fontWeight: FontWeight.w700),
+              ),
+            ],
+          );
+        }
+        return row;
+      }),
+    ),
+  );
 
   }
 
