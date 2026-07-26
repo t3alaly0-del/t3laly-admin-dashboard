@@ -447,41 +447,41 @@ return GestureDetector(
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: const Color(0xFFDDEEF7), width: 1.5),
       ),
-      child: LayoutBuilder(builder: (context, constraints) {
-        final codeText = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(code.code,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                softWrap: false,
-                style: const TextStyle(
-                    fontFamily: 'monospace',
-                    fontSize: 13,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1,
-                    color: AppColors.ink)),
-            if (meta.isNotEmpty)
-              Text(meta.toString(),
-                  style: const TextStyle(
-                      fontSize: 11, color: Color(0xFF5D8BAB), fontWeight: FontWeight.w700)),
-          ],
-        );
-
-        final badge = Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-          decoration: BoxDecoration(
-              color: badgeColors[status],
-              borderRadius: BorderRadius.circular(999)),
-          child: Text(badgeLabels[status]!,
-              style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                  color: badgeTextColors[status])),
-        );
-
-        final actions = [
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(code.code,
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    softWrap: false,
+    style: const TextStyle(
+        fontFamily: 'monospace',
+        fontSize: 13,
+        fontWeight: FontWeight.w900,
+        letterSpacing: 1,
+        color: AppColors.ink)),
+                if (meta.isNotEmpty)
+                  Text(meta.toString(),
+                      style: const TextStyle(
+                          fontSize: 11, color: Color(0xFF5D8BAB), fontWeight: FontWeight.w700)),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+            decoration: BoxDecoration(
+                color: badgeColors[status],
+                borderRadius: BorderRadius.circular(999)),
+            child: Text(badgeLabels[status]!,
+                style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    color: badgeTextColors[status])),
+          ),
+          const SizedBox(width: 6),
           if (!code.isExpired)
             IconButton(
               tooltip: code.used ? 'ارجع لغير مستخدم' : 'وضّح كمستخدم',
@@ -531,37 +531,9 @@ return GestureDetector(
             ),
             icon: const Icon(Icons.delete_outline_rounded, size: 18, color: AppColors.red),
           ),
-        ];
-
-        // Narrow screens: give the code its own row so it always has room
-        // to show at least a truncated "..." instead of being squeezed out
-        // by the badge + action icons.
-        if (constraints.maxWidth < 420) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(children: [
-                Expanded(child: codeText),
-                const SizedBox(width: 8),
-                badge,
-              ]),
-              const SizedBox(height: 4),
-              Row(mainAxisAlignment: MainAxisAlignment.end, children: actions),
-            ],
-          );
-        }
-
-        return Row(
-          children: [
-            Expanded(child: codeText),
-            badge,
-            const SizedBox(width: 6),
-            ...actions,
-          ],
-        );
-      }),
-    ),
-  );
+        ],
+      ),),
+    );
 
   }
 
