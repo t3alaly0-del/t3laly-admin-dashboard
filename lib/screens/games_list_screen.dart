@@ -208,37 +208,6 @@ class _AddGameCard extends StatelessWidget {
   final ValueChanged<String> onAdd;
   const _AddGameCard({required this.onAdd});
 
-  void _openDialog(BuildContext context) {
-    final controller = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (ctx) => Directionality(
-        textDirection: TextDirection.rtl,
-        child: AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: const Text('لعبة جديدة', style: TextStyle(fontWeight: FontWeight.w900)),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            decoration: const InputDecoration(hintText: 'اسم الحزمة، مثلاً: حزمة العيد'),
-          ),
-          actions: [
-            OutlinedButton(onPressed: () => Navigator.pop(ctx), child: const Text('إلغاء')),
-            ElevatedButton(
-              onPressed: () {
-                final name = controller.text.trim();
-                if (name.isEmpty) return;
-                onAdd(name);
-                Navigator.pop(ctx);
-              },
-              child: const Text('إضافة'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Material(
