@@ -10,7 +10,7 @@ class ApiService {
   //static const String _base = 'http://192.168.1.107:3000/api';
 
 // static const String _base = 'http://192.168.1.10:3000/api';
-static const String _base = 'https://t3lalybackend-production.up.railway.app/api';
+static const String _base = 'https://t3lalybackend-production-ae2e.up.railway.app/api';
 
   // ── Games ──────────────────────────────────────────────────────────────────
 

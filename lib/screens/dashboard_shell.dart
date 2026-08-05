@@ -166,7 +166,7 @@ class _DashboardShellScreenState extends State<DashboardShellScreen> {
           style: const TextStyle(
               color: Colors.white, fontSize: 15, fontWeight: FontWeight.w900),
         ),
-        actions: [
+        actions: const [
           // Container(
           //   margin: const EdgeInsets.only(left: 12),
           //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
